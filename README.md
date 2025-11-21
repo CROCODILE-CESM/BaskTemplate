@@ -1,10 +1,10 @@
 # BaskTemplate
 
-A template repository for ocean modeling workflows using CESM and related tools.
+A template repository for regional ocean modeling workflows using tools developed in the NSF-funded [CROCODILE](https://github.com/CROCODILE-CESM?view_as=public) project.
 
 ## Usage
 
-This repository is designed to be forked (e.g., `BaskMyRegionalCase`). After forking, run the installation script to set up packages in your forked repository, where you can commit submodules and your work. BaskTemplate itself remains lightweight by not committing submodules, but its install scripts always point to specific versions of each submodule.
+This repository is designed to be forked (e.g., `BaskMyRegionalCase`). After forking, run the installation script to set up packages in your forked repository, where you can commit and track your work. BaskTemplate itself remains lightweight by not committing submodules, but its install scripts always point to specific versions of each submodule.
 
 ## Installation
 
@@ -39,8 +39,8 @@ You can combine multiple flags. If no `--default` flag is provided, the script w
 
 ## Subpackages
 
-- **CrocoDash**: ROMS ocean model workflow management and execution framework
-- **CrocoCamp**: Diagnostics and analysis tools for ROMS model output
+- **CrocoDash**: CESM-MOM6 regional cases set up management
+- **CrocoCamp**: Diagnostics and analysis tools for MOM6 (and soon ROMS) model output
 - **CUPiD**: NCAR's unified framework for running analysis and diagnostics on climate model output
 - **CESM**: Community Earth System Model for climate simulations
 - **DART**: Data Assimilation Research Testbed for ensemble data assimilation
