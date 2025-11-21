@@ -35,6 +35,7 @@ for arg in "$@"; do
             done
             ;;
         --default) DEFAULT=1 ;;
+        --force) FORCE=1 ;;
     esac
 done
 
