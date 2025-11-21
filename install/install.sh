@@ -39,3 +39,11 @@ if [[ "$INSTALL_CUPID" -eq 1 ]]; then
 
     echo "CUPiD environments installed."
 fi
+
+# CESM
+if [[ "$INSTALL_CESM" -eq 1 ]]; then
+    echo "Installing CESM..."
+    cd "$CESM_PATH"
+    ./bin/git-fleximod update
+    echo "CESM installed."
+fi
