@@ -35,8 +35,62 @@ EOF
 fi
 
 # If no arguments provided, use envpaths.sh (preserves original behavior when called from install.sh)
-PKGS=(CESM MODEL2OBS CROCODASH CUPID DART)
 source ./envpaths.sh
+declare -A PKG_PATHS=(
+    [CESM]="model/CESM"
+    [MODEL2OBS]="diagnostics/model2obs"
+    [CROCODASH]="model/CrocoDash"
+    [CUPID]="diagnostics/CUPiD"
+    [DART]="data_assimilation/DART"
+)
+
+if [[ $# -eq 0 ]]; then
+    # Export CLEAN_* variables
+    for PKG in "${!PKG_PATHS[@]}"; do
+        export "CLEAN_${PKG}"="$(eval echo \${INSTALL_${PKG}})"
+    done
+else
+    # Parse CLI arguments for package selection
+    BASK_PATH="$(realpath -m "$(dirname "$PWD")")"
+    
+    declare -A PKG_PATHS=(
+        [CESM]="model/CESM"
+        [MODEL2OBS]="diagnostics/model2obs"
+        [CROCODASH]="model/CrocoDash"
+        [CUPID]="diagnostics/CUPiD"
+        [DART]="data_assimilation/DART"
+    )
+    
+    # Initialize all packages to 0
+    for PKG in "${!PKG_PATHS[@]}"; do
+        declare "${PKG}=0"
+    done
+    
+    # Parse arguments
+    for ((i=1; i<=$#; i++)); do
+        arg="${!i}"
+        
+        case "$arg" in
+            --all)
+                for PKG in "${!PKG_PATHS[@]}"; do
+                    declare "${PKG}=1"
+                done
+                ;;
+            *)
+                upper="${arg#--}"
+                upper="${upper^^}"
+                if [[ -v PKG_PATHS[$upper] ]]; then
+                    declare "${upper}=1"
+                fi
+                ;;
+        esac
+    done
+    
+    # Export CLEAN_* variables
+    for PKG in "${!PKG_PATHS[@]}"; do
+        export "CLEAN_${PKG}"="$(eval echo \${${PKG}})"
+    done
+fi
 
 if [[ $# -eq 0 ]]; then
     # Export CLEAN_* variables
@@ -76,7 +130,7 @@ fi
 echo "Cleaning selected components..."
 
 # CrocoDash
-if [ "$CLEAN_CROCODASH" -eq 1 ] && [ -e "$CROCODASH_PATH" ]; then
+if [ "$CLEAN_CROCODASH" -eq 1 ] && [ -n "$CROCODASH_PATH" ]; then
     echo "Removing CrocoDash..."
     cd "$BASK_PATH"
     git submodule deinit -f "$CROCODASH_PATH" 2>/dev/null || true
