@@ -82,6 +82,7 @@ if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     mamba env create -f "$CROCODASH_PATH"/environment.yml --name ${CROCODASH_ENV_NAME} --yes
     add_env_vars_to_conda "$CROCODASH_ENV_NAME"
     echo "CrocoDash environment installed."
+    cp "$CROCODASH_PATH"/demos/gallery/notebooks/CrocoDash/tutorials/crocodash_tutorial.ipynb "$NBS_PATH"
 fi
 
 # model2obs
