@@ -3,8 +3,18 @@
 set -euo pipefail
 
 # Check for help flag
+SHOW_HELP="0"
+if [ "$#" -eq 0 ]; then
+    SHOW_HELP="1"
+    echo "One or more packages need to be specified"
+    echo ""
+fi
 for arg in "$@"; do
     if [[ "$arg" == "-h" || "$arg" == "--help" ]]; then
+        SHOW_HELP="1"
+    fi
+done
+if [[ "$SHOW_HELP" -eq 1 ]]; then
         cat << EOF
 Usage: ./install.sh [OPTIONS]
 
@@ -35,8 +45,7 @@ Notes:
   - If a package already exists, it will be skipped unless -f/--force is used
 EOF
         exit 0
-    fi
-done
+fi
 
 # generate environmental variables
 INSTALL_DIR="$PWD"
