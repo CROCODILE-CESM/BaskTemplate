@@ -73,9 +73,9 @@ fi
 if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     echo "Installing model2obs environment..."
     cd "$MODEL2OBS_PATH"/install
-    cp envpaths.sh.template envpaths.sh
+    cp envpaths_NCAR.sh envpaths.sh
     MODEL2OBS_ENV_NAME="${ENV_PREFIX}-model2obs"
-    DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME=${MODEL2OBS_ENV_NAME} ./install.sh
+    DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME=${MODEL2OBS_ENV_NAME} ./install_NCAR.sh --tutorial
     cd "$INSTALL_DIR"
     echo "model2obs environment installed."
     cp "$MODEL2OBS_PATH"/tutorials/tutorial1_MOM6-CL-comparison.ipynb "$NBS_PATH"
