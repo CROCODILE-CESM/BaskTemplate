@@ -67,15 +67,17 @@ source ./setup_conda_env.sh
 
 NBS_PATH=$BASK_PATH"/notebooks/"
 mkdir -p $NBS_PATH
+if [[ -n ${ENV_PREFIX:-} ]]; then
+    ENV_PREFIX="${ENV_PREFIX}-"
+fi
 # CrocoDash
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "Installing CrocoDash environment..."
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CROCODASH_PATH/environment.yml")
-    CROCODASH_ENV_NAME="${ENV_PREFIX}-${ENV_NAME}"
+    CROCODASH_ENV_NAME="${ENV_PREFIX}${ENV_NAME}"
     mamba env create -f "$CROCODASH_PATH"/environment.yml --name ${CROCODASH_ENV_NAME} --yes
     add_env_vars_to_conda "$CROCODASH_ENV_NAME"
     echo "CrocoDash environment installed."
-    cp "$CROCODASH_PATH"/demos/gallery/notebooks/CrocoDash/tutorials/crocodash_tutorial.ipynb "$NBS_PATH"
 fi
 
 # model2obs
@@ -83,7 +85,7 @@ if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     echo "Installing model2obs environment..."
     cd "$MODEL2OBS_PATH"/install
     cp envpaths_NCAR.sh envpaths.sh
-    MODEL2OBS_ENV_NAME="${ENV_PREFIX}-model2obs"
+    MODEL2OBS_ENV_NAME="${ENV_PREFIX}""model2obs"
     DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME=${MODEL2OBS_ENV_NAME} ./install_NCAR.sh --tutorial
     cd "$INSTALL_DIR"
     echo "model2obs environment installed."
@@ -96,12 +98,12 @@ if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     echo "Installing CUPiD environments..."
 
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-infrastructure.yml)
-    CUPID_ENV1_NAME="${ENV_PREFIX}-${ENV_NAME}"
+    CUPID_ENV1_NAME="${ENV_PREFIX}${ENV_NAME}"
     mamba env create -f "$CUPID_PATH"/environments/cupid-infrastructure.yml --name ${CUPID_ENV1_NAME} --yes
     add_env_vars_to_conda "$CUPID_ENV1_NAME"
 
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-analysis.yml)
-    CUPID_ENV2_NAME="${ENV_PREFIX}-${ENV_NAME}"
+    CUPID_ENV2_NAME="${ENV_PREFIX}${ENV_NAME}"
     mamba env create -f "$CUPID_PATH"/environments/cupid-analysis.yml --name ${CUPID_ENV2_NAME} --yes
     add_env_vars_to_conda "$CUPID_ENV2_NAME"
 
@@ -159,4 +161,7 @@ echo "To activate a bask environment:"
 echo "conda activate <environment-name>"
 echo ""
 echo "Example:"
-echo "conda activate bask-CrocoDash"
+echo "conda activate CrocoDash"
+echo ""
+echo "If you specified a prefix for environment names:"
+echo "conda activate <prefix>-CrocoDash"

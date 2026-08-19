@@ -22,7 +22,7 @@ done
 DEFAULT=0
 FORCE=0
 SSH_GITHUB=0
-ENV_PREFIX='bask'
+ENV_PREFIX=''
 
 # Register what packages need to be installed from CLI flags
 for ((i=1; i<=$#; i++)); do
