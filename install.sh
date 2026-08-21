@@ -48,7 +48,8 @@ EOF
 fi
 
 # generate environmental variables
-INSTALL_DIR="$PWD"
+INSTALL_DIR="$PWD/install.d"
+cd $INSTALL_DIR
 ./generate_envpaths.sh "$@" # pass all flags
 
 # clean already installed submodules
@@ -65,7 +66,7 @@ fi
 # Source helper function
 source ./setup_conda_env.sh
 
-NBS_PATH=$BASK_PATH"/notebooks/"
+NBS_PATH=$BASK_PATH"/workspace/"
 mkdir -p $NBS_PATH
 if [[ -n ${ENV_PREFIX:-} ]]; then
     ENV_PREFIX="${ENV_PREFIX}-"
