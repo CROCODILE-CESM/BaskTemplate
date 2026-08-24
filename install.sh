@@ -48,7 +48,8 @@ EOF
 fi
 
 # generate environmental variables
-INSTALL_DIR="$PWD"
+INSTALL_DIR="$PWD/install.d"
+cd $INSTALL_DIR
 ./generate_envpaths.sh "$@" # pass all flags
 
 # clean already installed submodules
@@ -65,7 +66,7 @@ fi
 # Source helper function
 source ./setup_conda_env.sh
 
-NBS_PATH=$BASK_PATH"/notebooks/"
+NBS_PATH=$BASK_PATH"/workspace/"
 mkdir -p $NBS_PATH
 if [[ -n ${ENV_PREFIX:-} ]]; then
     ENV_PREFIX="${ENV_PREFIX}-"
@@ -73,6 +74,9 @@ fi
 # CrocoDash
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     echo "Installing CrocoDash environment..."
+    cd "$CROCODASH_PATH"
+    CROCODASH_SHA=$(git rev-parse HEAD)
+    cd "$INSTALL_DIR"
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CROCODASH_PATH/environment.yml")
     CROCODASH_ENV_NAME="${ENV_PREFIX}${ENV_NAME}"
     mamba env create -f "$CROCODASH_PATH"/environment.yml --name ${CROCODASH_ENV_NAME} --yes
@@ -84,6 +88,7 @@ fi
 if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     echo "Installing model2obs environment..."
     cd "$MODEL2OBS_PATH"/install
+    MODEL2OBS_SHA=$(git rev-parse HEAD)
     cp envpaths_NCAR.sh envpaths.sh
     MODEL2OBS_ENV_NAME="${ENV_PREFIX}""model2obs"
     DART_ROOT_PATH=${DART_PATH} CONDA_ENV_NAME=${MODEL2OBS_ENV_NAME} ./install_NCAR.sh --tutorial
@@ -96,6 +101,10 @@ fi
 # CUPiD
 if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     echo "Installing CUPiD environments..."
+
+    cd "$CUPID_PATH"
+    CUPID_SHA=$(git rev-parse HEAD)
+    cd "$INSTALL_DIR"
 
     ENV_NAME=$(awk -F ": " '/^name:/ {print $2}' "$CUPID_PATH"/environments/cupid-infrastructure.yml)
     CUPID_ENV1_NAME="${ENV_PREFIX}${ENV_NAME}"
@@ -114,6 +123,7 @@ fi
 if [[ "$INSTALL_CESM" -eq 1 ]]; then
     echo "Installing CESM..."
     cd "$CESM_PATH"
+    CESM_SHA=$(git rev-parse HEAD)
     ./bin/git-fleximod update --path "$CESM_PATH"
     cd "$INSTALL_DIR"
     echo "CESM installed."
@@ -131,37 +141,40 @@ touch $INSTALL_RECORD
 if [[ "$INSTALL_CROCODASH" -eq 1 ]]; then
     cat <<EOF | tee -a $INSTALL_RECORD
 CrocoDash:
-    path: $CROCODASH_PATH
-    conda environments: $CROCODASH_ENV_NAME
+    path:   $CROCODASH_PATH
+    commit: $CROCODASH_SHA
+    conda environment: $CROCODASH_ENV_NAME
 EOF
 fi
 if [[ "$INSTALL_CESM" -eq 1 ]]; then
     cat <<EOF | tee -a $INSTALL_RECORD
 CESM:
-    path: $CESM_PATH
+    path:   $CESM_PATH
+    commit: $CESM_SHA
 EOF
 fi
 if [[ "$INSTALL_MODEL2OBS" -eq 1 ]]; then
     cat <<EOF | tee -a $INSTALL_RECORD
 MODEL2OBS:
-    path: $MODEL2OBS_PATH
+    path:   $MODEL2OBS_PATH
+    commit: $MODEL2OBS_SHA
     conda environment: $MODEL2OBS_ENV_NAME
 EOF
 fi
 if [[ "$INSTALL_CUPID" -eq 1 ]]; then
     cat <<EOF | tee -a $INSTALL_RECORD
 CUPiD:
-    path: $CUPID_PATH
+    path:   $CUPID_PATH
+    commit: $CUPID_SHA
     conda environments: $CUPID_ENV1_NAME
                         $CUPID_ENV2_NAME
 EOF
 fi
 
-echo "To activate a bask environment:"
-echo "conda activate <environment-name>"
 echo ""
+echo "To activate an environment:"
+echo "conda activate <environment-name>"
 echo "Example:"
 echo "conda activate CrocoDash"
-echo ""
 echo "If you specified a prefix for environment names:"
 echo "conda activate <prefix>-CrocoDash"

@@ -73,6 +73,41 @@ else
     done
 fi
 
+if [[ $# -eq 0 ]]; then
+    # Export CLEAN_* variables
+    for PKG in "${PKGS[@]}"; do
+        export "CLEAN_${PKG}"="$(eval echo \${INSTALL_${PKG}})"
+    done
+else
+    # Initialize all packages to 0
+    for PKG in "${PKGS[@]}"; do
+        export "CLEAN_${PKG}=0"
+    done
+    
+    # Parse arguments
+    for ((i=1; i<=$#; i++)); do
+        arg="${!i}"
+        
+        case "$arg" in
+            --all)
+                for PKG in "${PKGS[@]}"; do
+                    export "CLEAN_${PKG}=1"
+                done
+                ;;
+            *)
+                upper="${arg#--}"
+                upper="${upper^^}"
+                for PKG in "${PKGS[@]}"; do
+                    if [[ "$PKG" == "$upper" ]]; then
+                        export "CLEAN_${upper}=1"
+                        break
+                    fi
+                done
+                ;;
+        esac
+    done
+fi
+
 echo "Cleaning selected components..."
 
 # CrocoDash
