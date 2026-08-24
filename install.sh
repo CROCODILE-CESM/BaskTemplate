@@ -158,11 +158,10 @@ CUPiD:
 EOF
 fi
 
+echo ""
 echo "To activate a bask environment:"
 echo "conda activate <environment-name>"
-echo ""
 echo "Example:"
 echo "conda activate CrocoDash"
-echo ""
 echo "If you specified a prefix for environment names:"
 echo "conda activate <prefix>-CrocoDash"
