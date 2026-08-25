@@ -1,5 +1,6 @@
 # Machine-dependent paths
-install/envpaths.sh
+install.d/envpaths.sh
+install.d/installed_*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -8,10 +8,9 @@ This repository is designed to be forked (e.g., `BaskMyRegionalCase`). After for
 
 ## Installation
 
-Navigate to the `install/` directory and run:
+From the repository root, run:
 
 ```bash
-cd install
 ./install.sh [flags]
 ```
 
@@ -22,7 +21,7 @@ cd install
 - `--model2obs`: Install model2obs diagnostics tools
 - `--cupid`: Install CUPiD diagnostics framework
 - `--cesm`: Install CESM model
-- `--dart`: Install DART data assimilation system
+- `--dart`: Currently a no-op on its own — DART is not yet installed as a standalone submodule/environment. It only sets the `DART_PATH` used by the model2obs installer. Standalone DART installation may be added in a future release.
 - `--all`: Install all packages
 
 #### Installation Options
