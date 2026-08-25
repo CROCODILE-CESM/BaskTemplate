@@ -61,7 +61,7 @@ elif [ -t 0 ]; then
     for PKG in "${!PKG_PATHS[@]}"; do
         DEF="$BASK_PATH/${PKG_PATHS[$PKG]}"
         printf "Please provide %s root path (default: %s): " "$PKG" "$DEF"
-        read input_path
+        read -r input_path
         if [ -n "$input_path" ]; then
             export "${PKG}_PATH"="$(realpath -m "$input_path")"
         else
